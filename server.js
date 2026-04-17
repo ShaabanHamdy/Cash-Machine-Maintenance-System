@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import Conection_db from './models/Conection_db.js';
 import machineRoutes from './routes/machineRoutes.js';
-import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -14,8 +13,6 @@ const app = express();
 // Middlewares to handle CORS and JSON parsing
 app.use(cors());
 app.use(express.json());
-app.use(notFound);      // For 404 errors
-app.use(errorHandler);  // For general server errors
 
 
 
