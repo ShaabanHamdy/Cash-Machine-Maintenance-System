@@ -1,22 +1,40 @@
+
 import mongoose from 'mongoose';
 
 const visitSchema = new mongoose.Schema({
-    // Link this visit to a specific machine using its ID
     machineId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Machine', 
-        required: true 
+        required: [true, 'Machine ID is required to log a visit'],
+        index: true //  Adding index for faster search/reports
     },
-    // The exact date of the visit (e.g., 12/1/2027)
+    
     actualVisitDate: { 
         type: Date, 
-        required: true 
+        required: [true, 'Visit date is required'],
+        default: Date.now 
     },
-    // Technical report details
-    reportSummary: { type: String, trim: true },
-    // Fixed cost per visit as you mentioned (1066.66)
-    visitCost: { type: Number, default: 1066.66 }
-}, { timestamps: true });
+    reportSummary: { 
+        type: String, 
+        trim: true,
+        maxLength: [1000, 'Report summary cannot exceed 1000 characters']
+    },
+    visitCost: { 
+        type: Number, 
+        default: 1066.66,
+        min: [0, 'Visit cost cannot be negative'] // Validation for data integrity
+    },
+    engineerName: { // Added: Useful for tracking who did the job
+        type: String,
+        trim: true
+    }
+}, { 
+    timestamps: true,
+    versionKey: false // Removes the __v field from documents
+});
+
+// Middleware: Update machine status if needed (Optional Logic)
+// visitSchema.post('save', async function() { ... });
 
 const Visit = mongoose.model('Visit', visitSchema);
 export default Visit;

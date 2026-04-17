@@ -1,31 +1,35 @@
-
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import Conection_db from './models/Conection_db.js';
+import Connection_db from './models/Connection_db.js';
 import machineRoutes from './routes/machineRoutes.js';
-
-// Load environment variables from .env file
+import { notFound, errorHandler } from './middleware/errorHandling.js';
+// 1. Load configurations
 dotenv.config();
+
+// 2. Connect to Database
+Connection_db(); 
 
 const app = express();
 
-// Middlewares to handle CORS and JSON parsing
+// 3. Middlewares
 app.use(cors());
 app.use(express.json());
 
-
-
-Conection_db(); // Connect to MongoDB
-
-// Define Port and MongoDB URI from environment variables
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-// Basic route for testing the API status
+// 4. Routes
 app.get('/', (req, res) => {
     res.send('Maintenance System API is active!');
 });
+
+// Use machine routes for all /api/machines endpoints
 app.use('/api/machines', machineRoutes);
+
+// 5. Error Handling Middlewares
+app.use(notFound);
+app.use(errorHandler);
+
+// 6. Start Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(` Server is running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+});
