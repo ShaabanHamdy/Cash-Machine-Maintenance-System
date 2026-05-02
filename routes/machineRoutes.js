@@ -1,30 +1,21 @@
-import express from 'express';
-import { 
-    addMachine, 
-    getMachines, 
-    getMachineById, 
-    updateMachine, 
-    deleteMachine,
-    addVisit,
-    getRegionalReport
-} from '../controllers/machineController.js';
+import express from "express";
+import {
+  addMachine,
+  getAllMachines,
+  getMachineById,
+  updateMachineById,
+  deleteOneMachineById,
+  deleteAllData,
+} from "../controllers/machineController.js";
 
 const router = express.Router();
-
 // General Machine Management
-router.route('/')
-    .get(getMachines)
-    .post(addMachine);
+router.route("/").get(getAllMachines).post(addMachine).delete(deleteAllData);
 
-router.route('/:id')
-    .get(getMachineById)
-    .put(updateMachine)
-    .delete(deleteMachine);
-
-// Visit Management
-router.post('/visits', addVisit);
-
-// Financial & Compliance Reports
-router.get('/reports/regional/:region', getRegionalReport);
+router
+  .route("/:id")
+  .get(getMachineById)
+  .put(updateMachineById)
+  .delete(deleteOneMachineById);
 
 export default router;

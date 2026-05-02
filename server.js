@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import Connection_db from './models/Connection_db.js';
 import machineRoutes from './routes/machineRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import visitsRoutes from './routes/visitsRoutes.js';
 import { notFound, errorHandler } from './middleware/errorHandling.js';
 // 1. Load configurations
 dotenv.config();
@@ -21,8 +23,12 @@ app.get('/', (req, res) => {
     res.send('Maintenance System API is active!');
 });
 
+
 // Use machine routes for all /api/machines endpoints
 app.use('/api/machines', machineRoutes);
+app.use('/api/visits', visitsRoutes);
+app.use('/api/users', userRoutes);
+
 
 // 5. Error Handling Middlewares
 app.use(notFound);
